@@ -5,10 +5,12 @@ function Dashboard() {
   const [projects, setProjects] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+
   const [taskTitle, setTaskTitle] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
   const [tasks, setTasks] = useState([]);
   const [selectedProject, setSelectedProject] = useState("");
+
   const fetchProjects = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -24,35 +26,35 @@ function Dashboard() {
       console.log(error);
     }
   };
+
   const createProject = async () => {
-  try {
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
 
-    await API.post(
-      "/projects",
-      {
-        title,
-        description,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      await API.post(
+        "/projects",
+        {
+          title,
+          description,
         },
-      }
-    );
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    // Input fields clear
-    setTitle("");
-    setDescription("");
+      setTitle("");
+      setDescription("");
 
-    // Refresh project list
-    fetchProjects();
+      fetchProjects();
 
-    alert("Project Created Successfully!");
-  } catch (error) {
-    alert(error.response?.data?.message || "Failed to create project");
-  }
-};
+      alert("Project Created Successfully!");
+    } catch (error) {
+      alert(error.response?.data?.message || "Failed to create project");
+    }
+  };
+
   useEffect(() => {
     fetchProjects();
   }, []);
@@ -91,7 +93,7 @@ function Dashboard() {
         />
 
         <button onClick={createProject}>
-         Create New Project
+          Create New Project
         </button>
       </div>
 
@@ -110,32 +112,62 @@ function Dashboard() {
       <h2>Tasks</h2>
 
       <div style={{ marginBottom: "20px" }}>
-         <input
+        <input
           type="text"
           placeholder="Task Title"
+          value={taskTitle}
+          onChange={(e) => setTaskTitle(e.target.value)}
           style={{
             marginRight: "10px",
             padding: "8px",
             width: "220px",
-      }}
-     />
+          }}
+        />
 
-     <input
-    type="text"
-    placeholder="Task Description"
-    style={{
-      marginRight: "10px",
-      padding: "8px",
-      width: "250px",
-    }}
-  />
+        <input
+          type="text"
+          placeholder="Task Description"
+          value={taskDescription}
+          onChange={(e) => setTaskDescription(e.target.value)}
+          style={{
+            marginRight: "10px",
+            padding: "8px",
+            width: "250px",
+          }}
+        />
 
-  <button>Create Task</button>
-</div>
+        <select
+          value={selectedProject}
+          onChange={(e) => setSelectedProject(e.target.value)}
+          style={{
+            marginRight: "10px",
+            padding: "8px",
+            width: "220px",
+          }}
+        >
+          <option value="">Select Project</option>
 
-<ul>
-  <li>Design Dashboard - Todo</li>
-</ul>
+          {projects.map((project) => (
+            <option key={project._id} value={project._id}>
+              {project.title}
+            </option>
+          ))}
+        </select>
+
+        <button>Create Task</button>
+      </div>
+
+      <ul>
+        {tasks.length === 0 ? (
+          <li>No tasks yet</li>
+        ) : (
+          tasks.map((task) => (
+            <li key={task._id}>
+              <strong>{task.title}</strong> - {task.status}
+            </li>
+          ))
+        )}
+      </ul>
     </div>
   );
 }
