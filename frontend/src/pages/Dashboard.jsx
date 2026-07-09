@@ -5,7 +5,10 @@ function Dashboard() {
   const [projects, setProjects] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-
+  const [taskTitle, setTaskTitle] = useState("");
+  const [taskDescription, setTaskDescription] = useState("");
+  const [tasks, setTasks] = useState([]);
+  const [selectedProject, setSelectedProject] = useState("");
   const fetchProjects = async () => {
     try {
       const token = localStorage.getItem("token");
