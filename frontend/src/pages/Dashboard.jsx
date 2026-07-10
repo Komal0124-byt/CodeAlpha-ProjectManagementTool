@@ -82,7 +82,7 @@ function Dashboard() {
     );
 
     alert("Task Created Successfully!");
-
+    fetchTasks();
     setTaskTitle("");
     setTaskDescription("");
     setSelectedProject("");
@@ -91,10 +91,36 @@ function Dashboard() {
     alert(error.response?.data?.message || "Failed to create task");
   }
 };
-  useEffect(() => {
-    fetchProjects();
-  }, []);
+ 
+    const fetchTasks = async () => {
+  try {
+    if (!selectedProject) return;
 
+    const token = localStorage.getItem("token");
+
+    const res = await API.get(
+      `/tasks/project/${selectedProject}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setTasks(res.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+   useEffect(() => {
+  fetchProjects();
+}, []);
+
+useEffect(() => {
+  if (selectedProject) {
+    fetchTasks();
+  }
+}, [selectedProject]);
   return (
     <div style={{ padding: "30px" }}>
       <h1>Project Management Dashboard</h1>
