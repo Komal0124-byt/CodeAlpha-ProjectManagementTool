@@ -111,6 +111,25 @@ function Dashboard() {
   } catch (error) {
     console.log(error);
   }
+}; 
+    const updateTaskStatus = async (taskId, status) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    await API.put(
+      `/tasks/${taskId}/status`,
+      { status },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    fetchTasks();
+  } catch (error) {
+    alert(error.response?.data?.message || "Failed to update task");
+  }
 };
    useEffect(() => {
   fetchProjects();
@@ -222,16 +241,33 @@ useEffect(() => {
       </div>
 
       <ul>
-        {tasks.length === 0 ? (
-          <li>No tasks yet</li>
+       {tasks.length === 0 ? (
+         <li>No tasks yet</li>
         ) : (
           tasks.map((task) => (
-            <li key={task._id}>
-              <strong>{task.title}</strong> - {task.status}
-            </li>
-          ))
-        )}
-      </ul>
+            <li key={task._id} style={{ marginBottom: "15px" }}>
+               <strong>{task.title}</strong>
+
+              <br />
+
+               {task.description}
+
+              <br />
+
+               <select
+                 value={task.status}
+                 onChange={(e) =>
+                   updateTaskStatus(task._id, e.target.value)
+                  }
+                >
+                  <option value="Todo">Todo</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Done">Done</option>
+               </select>
+           </li>
+         ))
+       )}
+     </ul>
     </div>
   );
 }
