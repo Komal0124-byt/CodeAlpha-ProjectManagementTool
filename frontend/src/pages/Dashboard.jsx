@@ -54,7 +54,43 @@ function Dashboard() {
       alert(error.response?.data?.message || "Failed to create project");
     }
   };
+   const createTask = async () => {
+  try {
+    if (!selectedProject) {
+      alert("Please select a project");
+      return;
+    }
 
+    const token = localStorage.getItem("token");
+     console.log("Task Data:", {
+        title: taskTitle,
+       description: taskDescription,
+        project: selectedProject,
+     });
+    await API.post(
+      "/tasks",
+      {
+        title: taskTitle,
+        description: taskDescription,
+        project: selectedProject,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    alert("Task Created Successfully!");
+
+    setTaskTitle("");
+    setTaskDescription("");
+    setSelectedProject("");
+
+  } catch (error) {
+    alert(error.response?.data?.message || "Failed to create task");
+  }
+};
   useEffect(() => {
     fetchProjects();
   }, []);
@@ -154,7 +190,9 @@ function Dashboard() {
           ))}
         </select>
 
-        <button>Create Task</button>
+        <button onClick={createTask}>
+           Create Task
+        </button>
       </div>
 
       <ul>

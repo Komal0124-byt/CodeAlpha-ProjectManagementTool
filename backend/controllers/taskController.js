@@ -3,6 +3,8 @@ import Task from "../models/Task.js";
 // Create Task
 export const createTask = async (req, res) => {
   try {
+    console.log("REQ BODY:", req.body);
+
     const { title, description, project, assignedTo } = req.body;
 
     const task = await Task.create({
@@ -15,6 +17,8 @@ export const createTask = async (req, res) => {
     res.status(201).json(task);
 
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       message: error.message,
     });
@@ -53,8 +57,8 @@ export const updateTaskStatus = async (req, res) => {
     res.status(200).json(task);
 
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  res.status(500).json({
+    message: error.message,
+  });
+}
 };
