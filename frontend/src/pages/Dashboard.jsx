@@ -131,6 +131,23 @@ function Dashboard() {
     alert(error.response?.data?.message || "Failed to update task");
   }
 };
+   const deleteTask = async (taskId) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    await API.delete(`/tasks/${taskId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    alert("Task Deleted Successfully!");
+
+    fetchTasks();
+  } catch (error) {
+    alert(error.response?.data?.message || "Failed to delete task");
+  }
+};
    useEffect(() => {
   fetchProjects();
 }, []);
@@ -240,7 +257,7 @@ useEffect(() => {
         </button>
       </div>
 
-      <ul>
+     <ul>
        {tasks.length === 0 ? (
          <li>No tasks yet</li>
         ) : (
@@ -248,26 +265,45 @@ useEffect(() => {
             <li key={task._id} style={{ marginBottom: "15px" }}>
                <strong>{task.title}</strong>
 
-              <br />
+               <br />
 
                {task.description}
 
-              <br />
+               <br />
+               <br />
 
                <select
-                 value={task.status}
-                 onChange={(e) =>
-                   updateTaskStatus(task._id, e.target.value)
-                  }
-                >
-                  <option value="Todo">Todo</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="Done">Done</option>
-               </select>
+                  value={task.status}
+                  onChange={(e) =>
+                      updateTaskStatus(task._id, e.target.value)
+                 }
+                 style={{
+                    padding: "5px",
+                    marginRight: "10px",
+               }}
+              >
+                    <option value="Todo">Todo</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Done">Done</option>
+                </select>
+
+                <button
+                   onClick={() => deleteTask(task._id)}
+                   style={{
+                      backgroundColor: "red",
+                     color: "white",
+                      border: "none",
+                      padding: "6px 12px",
+                     borderRadius: "5px",
+                     cursor: "pointer",
+                }}
+               >
+                 Delete
+                </button>
            </li>
-         ))
-       )}
-     </ul>
+           ))
+         )}
+      </ul>
     </div>
   );
 }
