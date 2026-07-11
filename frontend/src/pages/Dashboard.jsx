@@ -54,6 +54,28 @@ function Dashboard() {
       alert(error.response?.data?.message || "Failed to create project");
     }
   };
+  const deleteProject = async (projectId) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    await API.delete(`/projects/${projectId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    alert("Project Deleted Successfully!");
+
+    fetchProjects();
+
+    if (selectedProject === projectId) {
+      setSelectedProject("");
+      setTasks([]);
+    }
+  } catch (error) {
+    alert(error.response?.data?.message || "Failed to delete project");
+  }
+};
    const createTask = async () => {
   try {
     if (!selectedProject) {
@@ -196,14 +218,33 @@ useEffect(() => {
       </div>
 
       <ul>
-        {projects.map((project) => (
-          <li key={project._id}>
-            <strong>{project.title}</strong>
-            <br />
-            {project.description}
-          </li>
-        ))}
-      </ul>
+  {projects.map((project) => (
+    <li key={project._id} style={{ marginBottom: "15px" }}>
+      <strong>{project.title}</strong>
+
+      <br />
+
+      {project.description}
+
+      <br />
+      <br />
+
+      <button
+        onClick={() => deleteProject(project._id)}
+        style={{
+          backgroundColor: "red",
+          color: "white",
+          border: "none",
+          padding: "6px 12px",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
+        Delete Project
+      </button>
+    </li>
+  ))}
+</ul>
 
       <hr />
 
