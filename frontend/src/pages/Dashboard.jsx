@@ -76,6 +76,13 @@ function Dashboard() {
     alert(error.response?.data?.message || "Failed to delete project");
   }
 };
+const logout = () => {
+  localStorage.removeItem("token");
+
+  alert("Logged out successfully!");
+
+  window.location.href = "/";
+};
    const createTask = async () => {
   try {
     if (!selectedProject) {
@@ -187,35 +194,30 @@ useEffect(() => {
 
       <h2>Projects</h2>
 
-      <div style={{ marginBottom: "20px" }}>
-        <input
-          type="text"
-          placeholder="Project Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          style={{
-            marginRight: "10px",
-            padding: "8px",
-            width: "220px",
-          }}
-        />
+      <div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "20px",
+  }}
+>
+  <h1>Project Management Dashboard</h1>
 
-        <input
-          type="text"
-          placeholder="Project Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          style={{
-            marginRight: "10px",
-            padding: "8px",
-            width: "250px",
-          }}
-        />
-
-        <button onClick={createProject}>
-          Create New Project
-        </button>
-      </div>
+  <button
+    onClick={logout}
+    style={{
+      backgroundColor: "#dc3545",
+      color: "white",
+      border: "none",
+      padding: "10px 18px",
+      borderRadius: "6px",
+      cursor: "pointer",
+    }}
+  >
+    Logout
+  </button>
+</div>
 
       <ul>
   {projects.map((project) => (
